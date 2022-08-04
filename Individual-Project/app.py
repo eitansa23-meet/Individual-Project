@@ -3,14 +3,22 @@ from flask import session as login_session
 import pyrebase
 
 Config = {
-  "apiKey": "AIzaSyDhnDE2j_PQ6bzxP8sq_wVH26OX4D8M66k",
+    "apiKey": "AIzaSyAt6FBViei_fTCcoNKcQOGQNHQYANBeC7E",
+
   "authDomain": "final-project-65575.firebaseapp.com",
+
+  "databaseURL": "https://final-project-65575-default-rtdb.europe-west1.firebasedatabase.app",
+
   "projectId": "final-project-65575",
+
   "storageBucket": "final-project-65575.appspot.com",
+
   "messagingSenderId": "823719740861",
+
   "appId": "1:823719740861:web:e314e585e79a2143297ed4",
-  "measurementId": "G-XQGLK7XF4Y",
-  "databaseURL":"https://final-project-65575-default-rtdb.europe-west1.firebasedatabase.app"}
+
+  "measurementId": "G-XQGLK7XF4Y"
+  }
 
 firebase = pyrebase.initialize_app(Config)
 auth = firebase.auth()
@@ -58,12 +66,14 @@ def signin():
     
 @app.route('/addnbch', methods=['GET', 'POST'])
 def addnbch():
-    # if request.user.is_authenticated: 
+    if 'user' in login_session:
         if request.method == 'POST':
             nbch = {'name':request.form["name"],'location':request.form["location"],'des':request.form["des"] ,"uid": login_session['user']['localId']}
             db.child("nbch").push(nbch)
+            return redirect(url_for("nbchlist"))
+        else:
             return render_template("addnbch.html")
-    # return render_template("final.html")
+    return render_template("final.html")
 
 
 
